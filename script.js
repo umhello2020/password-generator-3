@@ -1,74 +1,87 @@
-let lowerCase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-let upperCase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-let num = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-let symbol = ["!", "$", "#", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "^", "_", "`", "{", "|", "}", "~"]
+// Variables defined
+let lowerCase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+let upperCase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+let num = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+let symbol = ["!", "$", "#", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "^", "_", "`", "{", "|", "}", "~"];
 
-let passwordOpt = []
+// Create empty array to put user input into
+let passwordOpt = [];
 
+// Stores all prompts to collect user input
 function prompts() {
-  let lengthPrompt = prompt("How long would you like your password to be?")
-  let lowPrompt = prompt("Do you wish to include lowercase?").toLowerCase()
-  let uppPrompt = prompt("Do you wish to include upper case?").toLowerCase()
-  let numPrompt = prompt("Do you wish to include numbers?").toLowerCase()
-  let symPrompt = prompt("Do you wish to include symbols?").toLowerCase()
+  let lengthPrompt = prompt("How long would you like your password to be?");
 
-  if((lengthPrompt <= 7) || (lengthPrompt >= 129)) {
-    alert("Please enter a number between 8-128.")
-  }
+  if ((lengthPrompt <= 7) || (lengthPrompt >= 129)) {
+    alert("Please enter a number between 8-128.");
 
-  if(lowPrompt === "yes") {
-    passwordOpt.push(...lowerCase)
-  }
+    prompts();
+
+  } else {
+    let lowPrompt = confirm("Include lowercase?")
+    let uppPrompt = confirm("Include upper case?")//gets all values
+    let numPrompt = confirm("Include numbers?")
+    let symPrompt = confirm("Include symbols?")
+
+    if (lowPrompt === false &&
+        uppPrompt === false &&
+        numPrompt === false &&
+        symPrompt === false) {
+          alert("Must select at least one character type!");
+
+          prompts();
+        }
   
-  if(uppPrompt === "yes") {
-    passwordOpt.push(...upperCase)
-  }
+    if (lowPrompt) {
+      passwordOpt.push(...lowerCase)
+    };
+  
+    if (uppPrompt) {
+      passwordOpt.push(...upperCase)
+    };
+  
+    if (numPrompt) { //sends all values into an array
+      passwordOpt.push(...num)
+    };
+  
+    if (symPrompt) { 
+      passwordOpt.push(...symbol)
+    };
+    
+    generatePassword(lengthPrompt); // call 2
 
-  if(numPrompt === "yes") {
-    passwordOpt.push(...num)
-  }
-  if(symPrompt === "yes") {
-    passwordOpt.push (...symbol)
-  }
+  };
 
-}
-
-// create option arrays
-// create prompts, save to variables
-// create empty option array
-// send available option to array (need conditional logic)
-// look spread/rest operator
+ 
+};
 
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 
-let password = ""
-function generatePassword(length) {
-  // console.log("HEY! YOU CLICKED THE BUTTON!");
-  let div = document.querySelector("#header")
+let password = "";
 
-  let lengthPrompt = parseInt(length)
+function generatePassword(length) { //generate random password
+  let div = document.querySelector("#password");
+  let lengthPrompt = parseInt(length);// the prompt number of password length
+  
+  for (let i = 0; i < lengthPrompt; i++) { // loops however many times prompt returned (lengthPrompt)
+    let randomIndex = Math.floor(Math.random() * passwordOpt.length)
+    password += passwordOpt[randomIndex];
+  }
 
-  // for (let i = 0; o < lengthPrompt = Math.floor(Math.random())) 
+  div.innerHTML = password;
+};
 
-  // 1. Prompt the user for the password criteria
-  //    a. Password length 8 < 128
-  //    b. Lowercase, uppercase, numbers, special characters
-  // 2. Validate the input. (Ensure that at least one character type is being met)
-  // 3. Generate password based on criteria.
-
-
-  // 4. Display password to the page.
-  return "Generated password will go here!"; //generated password will be linked here 
-}
 // Write password to the #password input
-function writePassword() {
-  let password = generatePassword();
-  let passwordText = document.querySelector("#password"); 
+//function writePassword() {
+//let password = generatePassword();
+//let passwordText = document.querySelector("#password"); 
 
-  passwordText.value = password; //this links the created password to the page 
+// console.log(password)
+// passwordText.value = password; //this links the created password to the page 
 
-}
+//return password;
+//};
 
 // Add event listener to generate button
-generateBtn.addEventListener("click", writePassword);
+//generateBtn.addEventListener("click", writePassword);  //add event listener with call back to prompt function(button calls prompt > prompt function calls generatePassword)
+generateBtn.addEventListener("click", prompts);  //add event listener with call back to prompt function(button calls prompt > prompt function calls generatePassword)
